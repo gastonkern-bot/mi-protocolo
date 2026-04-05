@@ -3,138 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🛡️ Protocolo Gastón — Nardelli v2.7 PRO</title>
+    <title>🛡️ Protocolo Gastón — Nardelli v2.8 PRO</title>
     <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #05070a; --s1: #0d1117; --s2: #161b22; --border: #30363d;
-            --g: #00d395; --y: #f5ae2d; --r: #f85149; --b: #58a6ff;
-            --txt: #e6edf3; --dim: #8b949e; --mut: #484f58;
+            --g: #00d395; --y: #f5ae2d; --r: #f85149; --txt: #e6edf3; --dim: #8b949e;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: var(--txt); font-family: 'Space Mono', monospace; padding-bottom: 50px; }
         
-        /* Header & Timer */
         header { 
             position: sticky; top: 0; z-index: 100; padding: 15px 25px; 
             display: flex; align-items: center; justify-content: space-between;
             background: rgba(13, 17, 23, 0.95); border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
         }
         .logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 22px; color: var(--g); text-transform: uppercase; }
         #timer-box { color: var(--y); font-weight: bold; background: rgba(245, 174, 45, 0.1); padding: 5px 15px; border-radius: 4px; border: 1px solid rgba(245, 174, 45, 0.3); }
 
         main { max-width: 1600px; margin: 0 auto; padding: 20px; display: grid; gap: 20px; }
-        .section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; margin-bottom: 10px; border-left: 3px solid var(--g); padding-left: 10px; }
+        .section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--txt); text-transform: uppercase; margin-bottom: 10px; border-left: 4px solid var(--g); padding-left: 10px; }
 
-        /* Top Opportunities Grid */
         .top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .card { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
         .card-header { padding: 15px; background: var(--s2); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .ticker-name { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 900; line-height: 1; }
+        .ticker-name { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; line-height: 1; }
         
-        /* The Protocol Checklist (Traffic Lights) */
+        /* Semáforo Visual */
         .checklist { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border-top: 1px solid var(--border); }
-        .check-item { background: var(--s1); padding: 10px; text-align: center; }
-        .check-lbl { font-size: 9px; color: var(--dim); margin-bottom: 5px; }
-        .lamp { height: 6px; width: 30px; margin: 5px auto; border-radius: 10px; background: var(--mut); box-shadow: 0 0 5px transparent; }
-        .lamp.active-g { background: var(--g); box-shadow: 0 0 10px var(--g); }
-        .lamp.active-y { background: var(--y); box-shadow: 0 0 10px var(--y); }
-        .lamp.active-r { background: var(--r); box-shadow: 0 0 10px var(--r); }
+        .check-item { background: var(--s1); padding: 12px 5px; text-align: center; }
+        .check-lbl { font-size: 10px; color: var(--txt); font-weight: bold; margin-bottom: 8px; letter-spacing: 1px;}
+        .lamp { height: 8px; width: 40px; margin: 0 auto; border-radius: 10px; background: #222; transition: 0.3s; }
+        .lamp.G { background: var(--g); box-shadow: 0 0 12px var(--g); }
+        .lamp.Y { background: var(--y); box-shadow: 0 0 12px var(--y); }
+        .lamp.R { background: var(--r); box-shadow: 0 0 12px var(--r); }
+        .lamp-val { font-size: 11px; margin-top: 6px; color: var(--dim); }
 
-        .chart-container { height: 300px; width: 100%; background: #000; }
+        .chart-container { height: 350px; width: 100%; background: #000; }
         
-        .action-box { padding: 15px; background: var(--s2); border-top: 1px solid var(--border); }
-        .buy-signal { color: var(--g); font-weight: bold; font-size: 14px; margin-bottom: 8px; }
-        .levels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 12px; }
-        .lvl { padding: 5px; border-radius: 3px; text-align: center; font-weight: bold; }
-        .lvl-sl { background: rgba(248, 81, 73, 0.1); color: var(--r); }
-        .lvl-tp { background: rgba(0, 211, 149, 0.1); color: var(--g); }
+        .action-box { padding: 15px; background: var(--s2); border-top: 1px solid var(--border); text-align: center; }
+        .action-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; font-family: 'Barlow Condensed'; letter-spacing: 1px; }
 
-        /* Tables */
-        .table-box { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { text-align: left; color: var(--dim); padding: 10px; border-bottom: 1px solid var(--border); }
-        td { padding: 12px 10px; border-bottom: 1px solid rgba(48, 54, 61, 0.5); }
+        .table-box { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; padding: 15px; overflow-x: auto;}
+        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;}
+        th { color: var(--dim); padding: 12px; border-bottom: 1px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid rgba(48, 54, 61, 0.5); }
+        tr:hover { background: var(--s2); }
         
-        .btn { background: var(--g); color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; font-family: 'Barlow Condensed'; letter-spacing: 1px; }
-        .btn:hover { filter: brightness(1.1); }
+        .btn { background: var(--g); color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; font-family: 'Barlow Condensed'; letter-spacing: 1px; font-size: 14px;}
+        .btn:hover { filter: brightness(1.2); }
         
-        .status-bar { position: fixed; bottom: 0; width: 100%; background: var(--s2); padding: 5px 20px; font-size: 10px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+        .status-bar { position: fixed; bottom: 0; width: 100%; background: var(--s2); padding: 8px 20px; font-size: 11px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; color: var(--dim); z-index: 200;}
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">🛡️ Protocolo Nardelli <span style="color:var(--dim)">v2.7 PRO</span></div>
+    <div class="logo">🛡️ Protocolo Nardelli <span style="color:var(--dim)">v2.8 PRO</span></div>
     <div style="display:flex; gap:20px; align-items:center;">
-        <div id="timer-box">Sincronizando...</div>
-        <button class="btn" onclick="runScan()">⟳ REESCANEAR MERCADO</button>
+        <div id="timer-box">INICIANDO...</div>
+        <button class="btn" onclick="forceScan()">⟳ ESCANEAR AHORA</button>
     </div>
 </header>
 
 <main>
-    <div class="section-title">Oportunidades de Alta Probabilidad (Top 2)</div>
+    <div class="section-title">Análisis de Alta Probabilidad (Top 2)</div>
     <div class="top-grid" id="top-picks">
-        <div style="grid-column: span 2; text-align: center; padding: 50px; color: var(--dim);">Inicia el escaneo para analizar señales...</div>
+        <div style="grid-column: span 2; text-align: center; padding: 60px; color: var(--dim); border: 1px dashed var(--border); border-radius: 8px;">
+            Conectando con el mercado y calculando indicadores...
+        </div>
     </div>
 
     <div class="table-box">
-        <div class="section-title">Monitor de Panel Lider (Merval)</div>
+        <div class="section-title">Monitor General (Merval y CEDEARs)</div>
         <table>
             <thead>
                 <tr>
-                    <th>Ticker</th><th>Precio</th><th>Día %</th><th>RSI</th><th>MACD</th><th>Volumen</th><th>Señal</th>
+                    <th>Activo</th><th>Precio</th><th>Día %</th><th>RSI</th><th>MACD Hist</th><th>Volumen</th><th>Estado Protocolo</th>
                 </tr>
             </thead>
-            <tbody id="tbody-merval"></tbody>
+            <tbody id="tbody-general"></tbody>
         </table>
     </div>
 </main>
 
 <div class="status-bar">
-    <div id="status-txt">Listo para operar.</div>
-    <div>Operativa: Swing Trading | Capital Sugerido: $100.000 ARS | San Justo, Arg.</div>
+    <div id="status-txt">Sistema en espera.</div>
+    <div>Operativa: Swing Trading | Capital Sugerido: $100.000 ARS</div>
 </div>
 
 <script>
-    const TICKERS = ['ALUA.BA', 'YPFD.BA', 'PAMP.BA', 'GGAL.BA', 'BMA.BA', 'CEPU.BA', 'TGSU2.BA', 'AAPL', 'TSLA', 'NVDA', 'META'];
-    let countdown = 300;
+    const TICKERS = ['ALUA.BA', 'YPFD.BA', 'PAMP.BA', 'GGAL.BA', 'BMA.BA', 'CEPU.BA', 'TGSU2.BA', 'AAPL', 'TSLA', 'NVDA', 'META', 'MELI'];
+    let countdown = 300; // 5 minutos
+    let scanInterval;
     const chartInstances = {};
 
-    // --- LÓGICA DEL CONTADOR ---
+    // --- RELOJ ---
     function startTimer() {
-        setInterval(() => {
-            const minutes = Math.floor(countdown / 60);
-            const seconds = countdown % 60;
-            document.getElementById('timer-box').innerText = `AUTO-SCAN EN: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-            if (--countdown < 0) {
-                countdown = 300;
-                runScan();
-            }
+        clearInterval(scanInterval);
+        scanInterval = setInterval(() => {
+            const m = Math.floor(countdown / 60);
+            const s = countdown % 60;
+            document.getElementById('timer-box').innerText = `PRÓXIMO ESCANEO: ${m}:${s < 10 ? '0'+s : s}`;
+            if (--countdown < 0) { forceScan(); }
         }, 1000);
     }
 
-    // --- OBTENCIÓN DE DATOS ---
+    function forceScan() {
+        countdown = 300;
+        runScan();
+    }
+
+    // --- CONEXIÓN DE DATOS (CON BYPASS ANTI-CACHE) ---
     async function fetchYahoo(ticker) {
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`;
-        const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        // Pedimos 2 años para que el zoom hacia atrás sea profundo
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=2y`;
+        const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&_=${Date.now()}`;
         try {
             const res = await fetch(proxy);
             const json = await res.json();
-            const data = JSON.parse(json.contents).chart.result[0];
-            return data;
+            const data = JSON.parse(json.contents);
+            if(data.chart.result) return data.chart.result[0];
+            return null;
         } catch (e) { return null; }
     }
 
-    // --- CÁLCULOS TÉCNICOS ---
-    function getIndicators(closes, volumes) {
-        const last = closes[closes.length - 1];
-        const prev = closes[closes.length - 2];
-        const change = ((last / prev - 1) * 100).toFixed(2);
+    // --- MATEMÁTICA DEL PROTOCOLO ---
+    function calcEMA(data, p) {
+        const k = 2 / (p + 1);
+        let e = data.slice(0, p).reduce((a, b) => a + b, 0) / p;
+        const r = [e];
+        for (let i = p; i < data.length; i++) {
+            e = data[i] * k + e * (1 - k);
+            r.push(e);
+        }
+        return r;
+    }
+
+    function processProtocol(data) {
+        if (!data || !data.indicators.quote[0].close) return null;
         
-        // RSI Simple
+        const closes = data.indicators.quote[0].close.filter(c => c != null);
+        const vols = data.indicators.quote[0].volume.filter(v => v != null);
+        if (closes.length < 40) return null; // No hay datos suficientes
+
+        const lastPrice = closes[closes.length - 1];
+        const prevPrice = closes[closes.length - 2];
+        const change = ((lastPrice / prevPrice) - 1) * 100;
+
+        // RSI (14)
         let up = 0, down = 0;
         for(let i = closes.length - 14; i < closes.length; i++) {
             const d = closes[i] - closes[i-1];
@@ -142,123 +160,55 @@
         }
         const rsi = 100 - (100 / (1 + (up/14) / (down/14 || 1)));
 
-        // Volumen relativo
-        const avgVol = volumes.slice(-20).reduce((a,b) => a+b, 0) / 20;
-        const vRatio = volumes[volumes.length-1] / avgVol;
+        // MACD (12, 26, 9)
+        const ema12 = calcEMA(closes, 12);
+        const ema26 = calcEMA(closes, 26);
+        const macdLine = ema26.map((v, i) => ema12[i + 14] - v);
+        const signalLine = calcEMA(macdLine, 9);
+        const hist = macdLine[macdLine.length - 1] - signalLine[signalLine.length - 1];
+        const prevHist = macdLine[macdLine.length - 2] - signalLine[signalLine.length - 2];
 
-        return { rsi, vRatio, change, last };
+        // Volumen Relativo (Media de 20 días)
+        const avgVol = vols.slice(-21, -1).reduce((a,b) => a+b, 0) / 20;
+        const vRatio = vols[vols.length - 1] / avgVol;
+
+        // EVALUACIÓN ESTRICTA (Semáforos)
+        let sigRSI = rsi < 45 ? 'G' : (rsi < 60 ? 'Y' : 'R');
+        let sigVol = vRatio > 1.3 ? 'G' : (vRatio > 0.8 ? 'Y' : 'R');
+        let sigTrend = (change >= 0 && change <= 3.5) ? 'G' : ((change < 0 && change > -2) ? 'Y' : 'R');
+        
+        let sigMACD = 'R';
+        let txtMACD = "Cayendo";
+        if (hist > 0 && hist > prevHist) { sigMACD = 'G'; txtMACD = "Alcista Fuerte"; }
+        else if (hist < 0 && hist > prevHist) { sigMACD = 'Y'; txtMACD = "Recuperando"; }
+
+        // SCORE (Sobre 100)
+        let score = 0;
+        if(sigRSI === 'G') score += 25; else if(sigRSI === 'Y') score += 10;
+        if(sigVol === 'G') score += 25; else if(sigVol === 'Y') score += 10;
+        if(sigTrend === 'G') score += 25; else if(sigTrend === 'Y') score += 10;
+        if(sigMACD === 'G') score += 25; else if(sigMACD === 'Y') score += 10;
+
+        return { 
+            lastPrice, change, rsi, vRatio, hist, 
+            sigRSI, sigVol, sigTrend, sigMACD, txtMACD, score 
+        };
     }
 
-    // --- RENDERIZADO DE GRÁFICOS (MEJORADO) ---
-    function createChart(containerId, result) {
+    // --- FORMATEO FECHAS PARA GRÁFICO (EVITA ERRORES) ---
+    function formatToLocalYMD(unixSecs) {
+        const d = new Date(unixSecs * 1000);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    }
+
+    function drawChart(containerId, rawData) {
         const container = document.getElementById(containerId);
+        if(!container) return;
         container.innerHTML = '';
+
         const chart = LightweightCharts.createChart(container, {
-            layout: { background: { color: '#05070a' }, textColor: '#d1d4dc' },
-            grid: { vertLines: { color: '#161b22' }, horzLines: { color: '#161b22' } },
-            rightPriceScale: { borderColor: '#30363d' },
-            timeScale: { borderColor: '#30363d', rightOffset: 5, barSpacing: 10 }, // Más espacio entre barras
-        });
-
-        const series = chart.addCandlestickSeries({ upColor: '#00d395', downColor: '#f85149', borderVisible: false, wickUpColor: '#00d395', wickDownColor: '#f85149' });
-        
-        const candleData = result.timestamp.map((t, i) => ({
-            time: t,
-            open: result.indicators.quote[0].open[i],
-            high: result.indicators.quote[0].high[i],
-            low: result.indicators.quote[0].low[i],
-            close: result.indicators.quote[0].close[i],
-        })).filter(d => d.open != null);
-
-        series.setData(candleData);
-        chart.timeScale().fitContent();
-        chartInstances[containerId] = chart;
-    }
-
-    // --- ESCANEO PRINCIPAL ---
-    async function runScan() {
-        document.getElementById('status-txt').innerText = "Escaneando mercado...";
-        const picksContainer = document.getElementById('top-picks');
-        const tableBody = document.getElementById('tbody-merval');
-        
-        let allResults = [];
-
-        for (let ticker of TICKERS) {
-            const data = await fetchYahoo(ticker);
-            if (data) {
-                const closes = data.indicators.quote[0].close.filter(c => c != null);
-                const volumes = data.indicators.quote[0].volume.filter(v => v != null);
-                const ind = getIndicators(closes, volumes);
-                
-                // Score del Protocolo
-                let score = 0;
-                if (ind.rsi > 30 && ind.rsi < 60) score += 40;
-                if (ind.vRatio > 1.2) score += 30;
-                if (ind.change > 0 && ind.change < 4) score += 30;
-
-                allResults.push({ ticker, ind, score, raw: data });
-            }
-        }
-
-        // Ordenar por score y mostrar Top 2
-        allResults.sort((a, b) => b.score - a.score);
-        picksContainer.innerHTML = '';
-        
-        allResults.slice(0, 2).forEach((res, i) => {
-            const id = `chart-${i}`;
-            const rsiCls = res.ind.rsi < 40 ? 'active-g' : (res.ind.rsi > 70 ? 'active-r' : 'active-y');
-            const volCls = res.ind.vRatio > 1.5 ? 'active-g' : (res.ind.vRatio > 1 ? 'active-y' : 'active-r');
-            const prcCls = res.ind.change > 0 && res.ind.change < 5 ? 'active-g' : 'active-r';
-
-            picksContainer.innerHTML += `
-                <div class="card">
-                    <div class="card-header">
-                        <div class="ticker-name">${res.ticker.replace('.BA','')}</div>
-                        <div style="text-align:right">
-                            <div style="font-size:10px; color:var(--dim)">SCORE PROTOCOLO</div>
-                            <div style="font-size:24px; font-weight:900; color:var(--g)">${res.score}%</div>
-                        </div>
-                    </div>
-                    <div class="chart-container" id="${id}"></div>
-                    <div class="checklist">
-                        <div class="check-item"><div class="check-lbl">RSI (30-60)</div><div class="lamp ${rsiCls}"></div></div>
-                        <div class="check-item"><div class="check-lbl">VOLUMEN (+)</div><div class="lamp ${volCls}"></div></div>
-                        <div class="check-item"><div class="check-lbl">TENDENCIA</div><div class="lamp ${prcCls}"></div></div>
-                        <div class="check-item"><div class="check-lbl">MACD HIST</div><div class="lamp active-g"></div></div>
-                    </div>
-                    <div class="action-box">
-                        <div class="buy-signal">ESTRATEGIA: ${res.score > 70 ? '🟢 COMPRA FUERTE' : '🟡 VIGILANCIA'}</div>
-                        <div class="levels">
-                            <div class="lvl lvl-sl">SL: $${(res.ind.last * 0.93).toFixed(2)}</div>
-                            <div class="lvl lvl-tp">TP1: $${(res.ind.last * 1.10).toFixed(2)}</div>
-                            <div class="lvl lvl-tp">TP2: $${(res.ind.last * 1.15).toFixed(2)}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            setTimeout(() => createChart(id, res.raw), 100);
-        });
-
-        // Llenar tabla general
-        tableBody.innerHTML = allResults.map(res => `
-            <tr>
-                <td><b>${res.ticker}</b></td>
-                <td>$${res.ind.last.toFixed(2)}</td>
-                <td style="color:${res.ind.change > 0 ? 'var(--g)' : 'var(--r)'}">${res.ind.change}%</td>
-                <td>${res.ind.rsi.toFixed(0)}</td>
-                <td>Normal</td>
-                <td>${res.ind.vRatio.toFixed(1)}x</td>
-                <td style="font-weight:bold; color:${res.score > 60 ? 'var(--g)' : 'var(--txt)'}">${res.score > 60 ? 'ENTRAR' : 'ESPERAR'}</td>
-            </tr>
-        `).join('');
-
-        document.getElementById('status-txt').innerText = "Escaneo finalizado. Datos actualizados.";
-    }
-
-    window.onload = () => {
-        startTimer();
-        runScan();
-    };
-</script>
-</body>
-</html>
+            layout: { background: { color: '#05070a' }, textColor: '#8b949e' },
+            grid: {
